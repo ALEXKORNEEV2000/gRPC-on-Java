@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+option java_package = "org.example.grpc";
+option java_multiple_files = true;
+
+service KVService {
+    rpc put(PutRequest) returns (Empty);
+    rpc get(GetRequest) returns (GetResponse);
+    rpc delete(DeleteRequest) returns (Empty);
+    rpc range(RangeRequest) returns (stream KVPair);
+    rpc count(Empty) returns (CountResponse);
+}
+
+message PutRequest {
+    string key = 1;
+    bytes value = 2;
+    bool has_value = 3; // true => value задан, false => хранить null
+}
+
+message GetRequest {
+    string key = 1;
+}
+
+message GetResponse {
+    bool found = 1;
+    bytes value = 2;
+    bool has_value = 3; // true => value не null, false => null
+}
+
+message DeleteRequest {
+    string key = 1;
+}
+
+message RangeRequest {
+    string key_since = 1;
+    string key_to = 2;
+}
+
+message KVPair {
+    string key = 1;
+    bytes value = 2;
+    bool has_value = 3;
+}
+
+message CountResponse {
+    int64 count = 1;
+}
+
+message Empty {}
